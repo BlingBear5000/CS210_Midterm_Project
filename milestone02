@@ -44,12 +44,22 @@ class SchoolList {
     School* tail;
     public:
     SchoolList() : head(nullptr), tail(nullptr) {}
-    void insertFirst(School school) {
-        school.next = head;
-        head = &school;
+    void insertFirst(School* school) {
+        if (head == nullptr) {
+            head = school;
+            tail = school;
+            return;
+        }
+        school->next = head;
+        head = school;
     }
-    void insertLast(School school) {
-        tail->next = &school;
+    void insertLast(School* school) {
+        if (head == nullptr) {
+            head = school;
+            tail = school;
+            return;
+        }
+        tail->next = school;
         tail = tail->next;
     }
     void deleteByName(string name) {
@@ -95,6 +105,23 @@ class SchoolList {
         School* temp = head;
         while (temp != nullptr) {
             cout << temp->name << endl;
+            temp = temp->next;
         }
     }
 };
+
+int main() {
+    SchoolList list;
+    CSVReader reader;
+    vector<vector<string>> schools = reader.readCSV("Illinois_Peoria_Schools.csv");
+    for (int i = 1; i < schools.size(); i++) {
+        string n = schools[i][0];
+        string a = schools[i][1];
+        string c = schools[i][2];
+        string s = schools[i][3];
+        string co = schools[i][4];
+        School* temp = new School(n, a, c, s, co);
+        list.insertFirst(temp);
+    }
+return 0;
+}
