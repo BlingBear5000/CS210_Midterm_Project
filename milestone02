@@ -123,5 +123,14 @@ int main() {
         School* temp = new School(n, a, c, s, co);
         list.insertFirst(temp);
     }
-return 0;
+    cout << "Search School: ";
+    string schoolName;
+    getline(cin, schoolName);
+    list.findByName(schoolName);
+    cout << "Delete School: ";
+    string schoolName2;
+    getline(cin, schoolName2);
+    list.deleteByName(schoolName2);
+    list.display();
+    return 0;
 }
