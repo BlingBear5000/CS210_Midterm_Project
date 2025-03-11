@@ -1,0 +1,38 @@
+#include <iostream>
+
+using namespace std;
+
+struct School {
+    string name;
+    string address;
+    string city;
+    string state;
+    string county;
+    School* left;
+    School* right;
+    School(string n, string a, string c, string s, string co) : name(n), address(a), city(c), state(s), county(co), left(nullptr), right(nullptr) {}
+};
+
+class SchoolBST {
+private:
+    School* root;
+
+    School* insertSchoolNode(School* node, School s) {
+        if (node == nullptr) return new School(s);
+        if (s.name < node->name) node->left = insertSchoolNode(node->left, s);
+        else node->right = insertSchoolNode(node->right, s);
+        return node;
+    }
+public:
+    void insertSchool(School school) {
+        insertSchoolNode(root, school);
+    }
+
+
+};
+
+
+int main() {
+    
+    return 0;
+}
