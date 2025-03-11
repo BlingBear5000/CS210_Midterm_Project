@@ -23,16 +23,25 @@ private:
         else node->right = insertSchoolNode(node->right, s);
         return node;
     }
+
+    School* findNode(School* node, string name) {
+        if (node == nullptr || node->name == name) return node;
+        return (name < node->name) ? findNode(node->left, name) : findNode(node->right, name);
+    }
+
 public:
     void insertSchool(School school) {
         insertSchoolNode(root, school);
     }
-
+    void findByName(string name) {
+        School* s = findNode(root, name);
+        cout << s->name << ", " << s->address << ", " << s->city << ", " << s->state << ", " << s->county << endl;
+    }
 
 };
 
 
 int main() {
-    
+
     return 0;
 }
