@@ -58,13 +58,12 @@ private:
         } else if (name > school->name) {
             school->right = deleteNode(school->right, name);
         } else {
-            if (school->left == nullptr && school->right == nullptr) {
-                delete school;
-            } else if (school->left == nullptr && school->right != nullptr) {
+            if (school->left == nullptr) {
                 School* temp = school->right;
                 delete school;
                 return temp;
-            } else if (school->right == nullptr && school->left != nullptr) {
+            }
+            if (school->right == nullptr) {
                 School* temp = school->left;
                 delete school;
                 return temp;
@@ -185,6 +184,9 @@ int main() {
         } else {
             cout << "Invalid command!" << endl;
         }
+    }
+    return 0;
+}
     }
 
     return 0;
