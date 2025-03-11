@@ -23,10 +23,27 @@ private:
         else node->right = insertSchoolNode(node->right, s);
         return node;
     }
-
     School* findNode(School* node, string name) {
         if (node == nullptr || node->name == name) return node;
         return (name < node->name) ? findNode(node->left, name) : findNode(node->right, name);
+    }
+    void preOrderTraversal(School* node) {
+        if (node == nullptr) return;
+        cout << node->name << " ";
+        preOrderTraversal(node->left);
+        preOrderTraversal(node->right);
+    }
+    void inOrderTraversal(School* node) {
+        if (node == nullptr) return;
+        preOrderTraversal(node->left);
+        cout << node->name << " ";
+        preOrderTraversal(node->right);
+    }
+    void postOrderTraversal(School* node) {
+        if (node == nullptr) return;
+        postOrderTraversal(node->left);
+        postOrderTraversal(node->right);
+        cout << node->name << " ";
     }
 
 public:
@@ -36,6 +53,21 @@ public:
     void findByName(string name) {
         School* s = findNode(root, name);
         cout << s->name << ", " << s->address << ", " << s->city << ", " << s->state << ", " << s->county << endl;
+    }
+    void displayPreOrder() {
+        cout << "Pre-order Traversal: ";
+        preOrderTraversal(root);
+        cout << endl;
+    }
+    void displayInOrder() {
+        cout << "In-order Traversal: ";
+        inOrderTraversal(root);
+        cout << endl;
+    }
+    void displayPostOrder() {
+        cout << "Post-order Traversal: ";
+        postOrderTraversal(root);
+        cout<<endl;
     }
 
 };
