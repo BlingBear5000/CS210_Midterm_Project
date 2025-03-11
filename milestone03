@@ -51,6 +51,37 @@ private:
         else node->right = insertSchoolNode(node->right, s);
         return node;
     }
+    School* deleteNode(School* school, string name) {
+        if (school == nullptr) return school;
+        if (name < school->name) {
+            school->left = deleteNode(school->left, name);
+        } else if (name > school->name) {
+            school->right = deleteNode(school->right, name);
+        } else {
+            if (school->left == nullptr && school->right == nullptr) {
+                delete school;
+            } else if (school->left == nullptr && school->right != nullptr) {
+                School* temp = school->right;
+                delete school;
+                return temp;
+            } else if (school->right == nullptr && school->left != nullptr) {
+                School* temp = school->left;
+                delete school;
+                return temp;
+            }
+            School* temp = school->right;
+            while (temp->left != nullptr) {
+                temp = temp->left;
+            }
+            root->name = temp ->name;
+            root->address = temp -> address;
+            root->city = temp -> city;
+            root->state = temp -> state;
+            root->county = temp -> county;
+            root->right = deleteNode(school->right, temp->name);
+        }
+        return school;
+    }
     School* findNode(School* node, string name) {
         if (node == nullptr || node->name == name) return node;
         return (name < node->name) ? findNode(node->left, name) : findNode(node->right, name);
@@ -77,6 +108,9 @@ private:
 public:
     void insertSchool(School school) {
         root = insertSchoolNode(root, school);
+    }
+    void deleteByName(string name) {
+        deleteNode(root, name);
     }
     void findByName(string name) {
         School* s = findNode(root, name);
