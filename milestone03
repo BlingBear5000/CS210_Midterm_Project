@@ -83,7 +83,11 @@ private:
         return school;
     }
     School* findNode(School* node, string name) {
-        if (node == nullptr || node->name == name) return node;
+        if (node == nullptr) return node;
+        if (node->name == name) {
+            cout << node->name << ", " << node->address << ", " << node->city << ", " << node->state << ", " << node->county << endl;
+            return node;
+        }
         return (name < node->name) ? findNode(node->left, name) : findNode(node->right, name);
     }
     void preOrderTraversal(School* node) {
@@ -114,7 +118,6 @@ public:
     }
     void findByName(string name) {
         School* s = findNode(root, name);
-        cout << s->name << ", " << s->address << ", " << s->city << ", " << s->state << ", " << s->county << endl;
     }
     void displayPreOrder() {
         cout << "Pre-order Traversal: ";
@@ -147,6 +150,41 @@ int main() {
         string co = schools[i][4];
         School temp(n, a, c, s, co);
         tree.insertSchool(temp);
+    }
+
+    bool finished = false;
+    while (!finished) {
+        cout << "commands:" << endl << "(0) exit" << endl << "(1) search" << endl << "(2) delete" << endl << "(3) display" << endl;
+        string command;
+        getline(cin, command);
+        if (command == "0") {
+            finished = true;
+        } else if (command == "1") {
+            cout << "Enter name: ";
+            string name;
+            getline(cin, name);
+            tree.findByName(name);
+        } else if (command == "2") {
+            cout << "Enter name: ";
+            string name;
+            getline(cin, name);
+            tree.deleteByName(name);
+        } else if (command == "3") {
+            cout << "how to display?" << endl << "(a) in-order" << endl << "(b) post-order" << endl << "(c) pre-order" << endl;
+            string display;
+            getline(cin, display);
+            if (display == "a") {
+                tree.displayInOrder();
+            }
+            if (display == "b") {
+                tree.displayPostOrder();
+            }
+            if (display == "c") {
+                tree.displayPreOrder();
+            }
+        } else {
+            cout << "Invalid command!" << endl;
+        }
     }
 
     return 0;
