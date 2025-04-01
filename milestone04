@@ -63,11 +63,14 @@ public:
     }
     string findByName(string name) {
         School* temp = table[hashFunction(name, 100)];
-        return "name: " + temp->name + "\naddress: " + temp->address + "\ncity: " + temp->city + "\nstate: " + temp->state + "\ncounty: " + temp->county;
+        if (temp == nullptr) {
+            return "School not found\n";
+        }
+        return "name: " + temp->name + "\naddress: " + temp->address + "\ncity: " + temp->city + "\nstate: " + temp->state + "\ncounty: " + temp->county + "\n";
     }
     void display() {
         for (pair<int, School*> p : table) {
-            cout << p.second->name + ", " + p.second->address + ", " + p.second->city + ", " + p.second->state + ", " + p.second->county + "\n";
+            cout << p.second->name + ", " + p.second->address + ", " + p.second->city + ", " + p.second->state + ", " + p.second->county + ", [position]: " << p.first << "\n";
         }
     }
 };
@@ -86,7 +89,29 @@ int main() {
         schoolsTable.insert(temp);
     }
 
-    schoolsTable.display();
+    bool finished = false;
+    while (!finished) {
+        cout << "commands:" << endl << "(0) exit" << endl << "(1) search" << endl << "(2) delete" << endl << "(3) display" << endl;
+        string command;
+        getline(cin, command);
+        if (command == "0") {
+            finished = true;
+        } else if (command == "1") {
+            cout << "Enter name: ";
+            string name;
+            getline(cin, name);
+            cout << schoolsTable.findByName(name);
+        } else if (command == "2") {
+            cout << "Enter name: ";
+            string name;
+            getline(cin, name);
+            schoolsTable.deleteByName(name);
+        } else if (command == "3") {
+            schoolsTable.display();
+        } else {
+            cout << "Invalid command!" << endl;
+        }
+    }
 
     return 0;
 }
