@@ -1,7 +1,35 @@
 #include <iostream>
 #include <unordered_map>
+#include <fstream>
+#include <sstream>
+#include <vector>
 
 using namespace std;
+
+class CSVReader {
+public:
+    static vector<vector<string>> readCSV(const string& filename) {
+        ifstream file(filename);
+        vector<vector<string>> data;
+        string line, word;
+
+        if (!file.is_open()) {
+            cerr << "Error: Could not open file " << filename << endl;
+            return data;
+        }
+
+        while (getline(file, line)) {
+            stringstream ss(line);
+            vector<string> row;
+            while (getline(ss, word, ',')) {
+                row.push_back(word);
+            }
+            data.push_back(row);
+        }
+        file.close();
+        return data;
+    }
+};
 
 struct School {
     string name;
@@ -22,34 +50,43 @@ int hashFunction(string key, int tableSize) {
 
 class SchoolHashTable {
 private:
-    unordered_map<int, School> table;
+    unordered_map<int, School*> table;
 public:
     void insert(School school) {
-        table[hashFunction(school.name, 100)] = school;
-
+        School* p = new School(school);
+        table[hashFunction(school.name, 100)] = p;
     }
     void deleteByName(string name) {
-        table.erase(hashFunction(name, 100));
+        int key = hashFunction(name, 100);
+        delete table[key];
+        table.erase(key);
     }
     string findByName(string name) {
-        School temp = table[hashFunction(name, 100)];
-        return "name: " + temp.name + "\naddress: " + temp.address + "\ncity: " + temp.city + "\nstate: " + temp.state + "\ncounty: " + temp.county;
+        School* temp = table[hashFunction(name, 100)];
+        return "name: " + temp->name + "\naddress: " + temp->address + "\ncity: " + temp->city + "\nstate: " + temp->state + "\ncounty: " + temp->county;
     }
     void display() {
-        for (pair<int, School> p : table) {
-            cout << p.second.name + ", " + p.second.address + ", " + p.second.city + ", " + p.second.state + p.second.county + "\n";
+        for (pair<int, School*> p : table) {
+            cout << p.second->name + ", " + p.second->address + ", " + p.second->city + ", " + p.second->state + ", " + p.second->county + "\n";
         }
     }
 };
 
 int main() {
-    int array[7];
-    cout << array[0] <<endl;
-    cout << array[1];
-    return 0;
-}
+    SchoolHashTable schoolsTable;
+    CSVReader reader;
+    vector<vector<string>> schools = reader.readCSV("Illinois_Peoria_Schools.csv");
+    for (int i = 1; i < schools.size(); i++) {
+        string n = schools[i][0];
+        string a = schools[i][1];
+        string c = schools[i][2];
+        string s = schools[i][3];
+        string co = schools[i][4];
+        School temp(n, a, c, s, co);
+        schoolsTable.insert(temp);
+    }
 
-int main() {
+    schoolsTable.display();
 
     return 0;
 }
