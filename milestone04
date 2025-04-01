@@ -1,4 +1,5 @@
 #include <iostream>
+#include <unordered_map>
 
 using namespace std;
 
@@ -20,21 +21,33 @@ int hashFunction(string key, int tableSize) {
 }
 
 class SchoolHashTable {
-    private:
-    public:
+private:
+    unordered_map<int, School> table;
+public:
     void insert(School school) {
+        table[hashFunction(school.name, 100)] = school;
 
     }
     void deleteByName(string name) {
-
+        table.erase(hashFunction(name, 100));
     }
     string findByName(string name) {
-        return "";
+        School temp = table[hashFunction(name, 100)];
+        return "name: " + temp.name + "\naddress: " + temp.address + "\ncity: " + temp.city + "\nstate: " + temp.state + "\ncounty: " + temp.county;
     }
     void display() {
-
+        for (pair<int, School> p : table) {
+            cout << p.second.name + ", " + p.second.address + ", " + p.second.city + ", " + p.second.state + p.second.county + "\n";
+        }
     }
 };
+
+int main() {
+    int array[7];
+    cout << array[0] <<endl;
+    cout << array[1];
+    return 0;
+}
 
 int main() {
 
