@@ -1,0 +1,42 @@
+#include <iostream>
+
+using namespace std;
+
+struct School {
+    string name;
+    string address;
+    string city;
+    string state;
+    string county;
+    School(string n, string a, string c, string s, string co) : name(n), address(a), city(c), state(s), county(co) {}
+};
+
+int hashFunction(string key, int tableSize) {
+    int hash = 0;
+    for (char ch : key) {
+        hash += ch;
+    }
+    return hash % tableSize;
+}
+
+class SchoolHashTable {
+    private:
+    public:
+    void insert(School school) {
+
+    }
+    void deleteByName(string name) {
+
+    }
+    string findByName(string name) {
+        return "";
+    }
+    void display() {
+
+    }
+};
+
+int main() {
+
+    return 0;
+}
