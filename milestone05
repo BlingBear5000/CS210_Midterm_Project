@@ -251,45 +251,56 @@ int main() {
             auto end_Insert = chrono::high_resolution_clock::now();
             double brute_time = chrono::duration<double, micro>(end_Insert - start_Insert).count();
             string setName;
-            string insertName;
+            string functionName;
             if (iterator == 0) {setName = "Illinois_Peoria_Schools";}
             if (iterator == 1) {setName = "Illinois_Schools";}
             if (iterator == 2) {setName = "USA_Schools";}
-            if (j == 0) {insertName = "BST insert";}
-            if (j == 1) {insertName = "Hash Table insert";}
-            if (j == 2) {insertName = "Linked List insert";}
-            outFile << setName + ", " + insertName + ", " << brute_time << "\n";
+            if (j == 0) {functionName = "BST insert";}
+            if (j == 1) {functionName = "Hash Table insert";}
+            if (j == 2) {functionName = "Linked List insert";}
+            outFile << setName + ", " + functionName + ", " << brute_time << "\n";
         }
 
         int random = rand()%130;
         for (int j = 0; j < 3; j++) {
             auto start_search = chrono::high_resolution_clock::now();
-            if (j == 0) {
-                string s = schoolTree.findByName(dataset[random][0]);
-            }
-            if (j == 1) {
-                string s = schoolTable.findByName(dataset[random][0]);
-            }
-            if (j == 2) {
-                string s = schoolList.findByName(dataset[random][0]);
-            }
+            if (j == 0) {string s = schoolTree.findByName(dataset[random][0]);}
+            if (j == 1) {string s = schoolTable.findByName(dataset[random][0]);}
+            if (j == 2) {string s = schoolList.findByName(dataset[random][0]);}
             auto end_search = chrono::high_resolution_clock::now();
             double brute_time = chrono::duration<double, micro>(end_search - start_search).count();
             string setName;
-            string insertName;
+            string functionName;
             if (iterator == 0) {setName = "Illinois_Peoria_Schools";}
             if (iterator == 1) {setName = "Illinois_Schools";}
             if (iterator == 2) {setName = "USA_Schools";}
-            if (j == 0) {insertName = "BST search";}
-            if (j == 1) {insertName = "Hash Table search";}
-            if (j == 2) {insertName = "Linked List search";}
-            outFile << setName + ", " + insertName + ", " << brute_time << "\n";
-
+            if (j == 0) {functionName = "BST search";}
+            if (j == 1) {functionName = "Hash Table search";}
+            if (j == 2) {functionName = "Linked List search";}
+            outFile << setName + ", " + functionName + ", " << brute_time << "\n";
         }
 
+        random = rand()%130;
+        for (int j = 0; j < 3; j++) {
+            auto start_search = chrono::high_resolution_clock::now();
+            if (j == 0) {schoolTree.deleteByName(dataset[random][0]);}
+            if (j == 1) {schoolTable.deleteByName(dataset[random][0]);}
+            if (j == 2) {schoolList.deleteByName(dataset[random][0]);}
+            auto end_search = chrono::high_resolution_clock::now();
+            double brute_time = chrono::duration<double, micro>(end_search - start_search).count();
+            string setName;
+            string functionName;
+            if (iterator == 0) {setName = "Illinois_Peoria_Schools";}
+            if (iterator == 1) {setName = "Illinois_Schools";}
+            if (iterator == 2) {setName = "USA_Schools";}
+            if (j == 0) {functionName = "BST delete";}
+            if (j == 1) {functionName = "Hash Table delete";}
+            if (j == 2) {functionName = "Linked List delete";}
+            outFile << setName + ", " + functionName + ", " << brute_time << "\n";
+        }
+        
         iterator++;
     }
-
 
     outFile.close();
     cout << "Timings saved to " << file << endl;
