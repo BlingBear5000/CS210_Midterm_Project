@@ -97,8 +97,9 @@ public:
     void deleteByName(string name) {
         deleteNode(root, name);
     }
-    void findByName(string name) {
+    string findByName(string name) {
         SchoolTreeNode* s = findNode(root, name);
+        return s->name + ", " + s->address + ", " + s->city + ", " + s->state + ", " + s->county;
     }
 };
 
@@ -125,15 +126,15 @@ private:
 public:
     void insert(SchoolHashNode school) {
         SchoolHashNode* p = new SchoolHashNode(school);
-        table[hashFunction(school.name, 100)] = p;
+        table[hashFunction(school.name, 200000)] = p;
     }
     void deleteByName(string name) {
-        int key = hashFunction(name, 100);
+        int key = hashFunction(name, 200000);
         delete table[key];
         table.erase(key);
     }
     string findByName(string name) {
-        SchoolHashNode* temp = table[hashFunction(name, 100)];
+        SchoolHashNode* temp = table[hashFunction(name, 200000)];
         if (temp == nullptr) {
             return "School not found\n";
         }
@@ -184,26 +185,87 @@ class SchoolList {
             tail = temp;
         }
     }
-    void findByName(string name) {
+    string findByName(string name) {
         if (head == nullptr) {
-            return;
+            return "list is empty";
         }
         if (head->name == name) {
-            cout << head->name << ", " << head->address << ", " << head->city << ", " << head->state << ", " << head->county << endl;
+            return head->name + ", " + head->address + ", " + head->city + ", " + head->state + ", " + head->county + "\n";
         }
-        else {
-            SchoolListNode* temp = head;
-            while (temp->next != nullptr) {
-                if (temp->next->name == name) {
-                    cout << temp->next->name << ", " << temp->next->address << ", " << temp->next->city << ", " << temp->next->state << ", " << temp->next->county << endl;
-                }
-                temp = temp->next;
+        SchoolListNode* temp = head;
+        while (temp->next != nullptr) {
+            if (temp->next->name == name) {
+                return temp->next->name + ", " + temp->next->address + ", " + temp->next->city + ", " + temp->next->state + ", " + temp->next->county + "\n";
             }
+            temp = temp->next;
         }
     }
 };
 
 int main() {
+    Timer t;
+    SchoolBST schoolTree;
+    SchoolList schoolList;
+    SchoolHashTable schoolTable;
 
+    CSVReader reader;
+    vector<vector<string>> PeoriaSchools = reader.readCSV("Illinois_Peoria_Schools.csv");
+    vector<vector<string>> IllinoisSchools = reader.readCSV("Illinois_Schools.csv");
+    vector<vector<string>> UsaSchools = reader.readCSV("USA_Schools.csv");
+    vector sets = {PeoriaSchools, IllinoisSchools, UsaSchools};
+    string file = "timings.csv";
+    ofstream outFile(file);
+    if (!outFile.is_open())
+    {
+        cerr << "Failed to open timings.csv for writing.\n";
+        return 1;
+    }
+    outFile << "dataset, function, time (microseconds),\n";
+    int iterator = 0;
+    for (vector dataset : sets) {
+        for (int j = 0; j < 3; j++) {
+            auto start_Insert = chrono::high_resolution_clock::now();
+            for (int i = 1; i < dataset.size(); i++) {
+                string n = dataset[i][0];
+                string a = dataset[i][1];
+                string c = dataset[i][2];
+                string s = dataset[i][3];
+                string co;
+                try {
+                    co = dataset[i][4];
+                } catch (exception& e) {
+                    co = "";
+                }
+                if (j == 0) {
+                    SchoolTreeNode temp(n, a, c, s, co);
+                    schoolTree.insertSchool(temp);
+                }
+                if (j == 1) {
+                    SchoolHashNode temp(n, a, c, s, co);
+                    schoolTable.insert(temp);
+                }
+                if (j == 2) {
+                    SchoolListNode* temp = new SchoolListNode(n, a, c, s, co);
+                    schoolList.insertFirst(temp);
+                }
+            }
+            auto end_Insert = chrono::high_resolution_clock::now();
+            double brute_time = chrono::duration<double, micro>(end_Insert - start_Insert).count();
+            string setName;
+            string insertName;
+            if (iterator == 0) {setName = "Illinois_Peoria_Schools";}
+            if (iterator == 1) {setName = "Illinois_Schools";}
+            if (iterator == 2) {setName = "USA_Schools";}
+            if (j == 0) {insertName = "BST insert";}
+            if (j == 1) {insertName = "Hash Table insert";}
+            if (j == 2) {insertName = "Linked List insert";}
+            outFile << setName + ", " + insertName + ", " << brute_time << "\n";
+        }
+        iterator++;
+    }
+
+
+    outFile.close();
+    cout << "Timings saved to " << file << endl;
     return 0;
 }
