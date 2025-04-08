@@ -2,6 +2,7 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include <unordered_map>
 #include "timer.h"
 
 using namespace std;
@@ -98,6 +99,45 @@ public:
     }
     void findByName(string name) {
         SchoolTreeNode* s = findNode(root, name);
+    }
+};
+
+struct SchoolHashNode {
+    string name;
+    string address;
+    string city;
+    string state;
+    string county;
+    SchoolHashNode(string n, string a, string c, string s, string co) : name(n), address(a), city(c), state(s), county(co) {}
+};
+
+int hashFunction(string key, int tableSize) {
+    int hash = 0;
+    for (char ch : key) {
+        hash += ch;
+    }
+    return hash % tableSize;
+}
+
+class SchoolHashTable {
+private:
+    unordered_map<int, SchoolHashNode*> table;
+public:
+    void insert(SchoolHashNode school) {
+        SchoolHashNode* p = new SchoolHashNode(school);
+        table[hashFunction(school.name, 100)] = p;
+    }
+    void deleteByName(string name) {
+        int key = hashFunction(name, 100);
+        delete table[key];
+        table.erase(key);
+    }
+    string findByName(string name) {
+        SchoolHashNode* temp = table[hashFunction(name, 100)];
+        if (temp == nullptr) {
+            return "School not found\n";
+        }
+        return "name: " + temp->name + "\naddress: " + temp->address + "\ncity: " + temp->city + "\nstate: " + temp->state + "\ncounty: " + temp->county + "\n";
     }
 };
 
