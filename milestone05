@@ -2,6 +2,7 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include "timer.h"
 
 using namespace std;
 
@@ -30,7 +31,77 @@ public:
     }
 };
 
+struct SchoolTreeNode {
+    string name;
+    string address;
+    string city;
+    string state;
+    string county;
+    SchoolTreeNode* left;
+    SchoolTreeNode* right;
+    SchoolTreeNode(string n, string a, string c, string s, string co) : name(n), address(a), city(c), state(s), county(co), left(nullptr), right(nullptr) {}
+};
+class SchoolBST {
+private:
+    SchoolTreeNode* root = nullptr;
+
+    SchoolTreeNode* insertSchoolNode(SchoolTreeNode* node, SchoolTreeNode s) {
+        if (node == nullptr) return new SchoolTreeNode(s);
+        if (s.name < node->name) node->left = insertSchoolNode(node->left, s);
+        else node->right = insertSchoolNode(node->right, s);
+        return node;
+    }
+    SchoolTreeNode* deleteNode(SchoolTreeNode* school, string name) {
+        if (school == nullptr) return school;
+        if (name < school->name) {
+            school->left = deleteNode(school->left, name);
+        } else if (name > school->name) {
+            school->right = deleteNode(school->right, name);
+        } else {
+            if (school->left == nullptr) {
+                SchoolTreeNode* temp = school->right;
+                delete school;
+                return temp;
+            }
+            if (school->right == nullptr) {
+                SchoolTreeNode* temp = school->left;
+                delete school;
+                return temp;
+            }
+            SchoolTreeNode* temp = school->right;
+            while (temp->left != nullptr) {
+                temp = temp->left;
+            }
+            root->name = temp ->name;
+            root->address = temp -> address;
+            root->city = temp -> city;
+            root->state = temp -> state;
+            root->county = temp -> county;
+            root->right = deleteNode(school->right, temp->name);
+        }
+        return school;
+    }
+    SchoolTreeNode* findNode(SchoolTreeNode* node, string name) {
+        if (node == nullptr) return node;
+        if (node->name == name) {
+            cout << node->name << ", " << node->address << ", " << node->city << ", " << node->state << ", " << node->county << endl;
+            return node;
+        }
+        return (name < node->name) ? findNode(node->left, name) : findNode(node->right, name);
+    }
+public:
+    void insertSchool(SchoolTreeNode school) {
+        root = insertSchoolNode(root, school);
+    }
+    void deleteByName(string name) {
+        deleteNode(root, name);
+    }
+    void findByName(string name) {
+        SchoolTreeNode* s = findNode(root, name);
+    }
+};
+
 int main() {
-    
+
     return 0;
 }
