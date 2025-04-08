@@ -141,6 +141,68 @@ public:
     }
 };
 
+struct SchoolListNode {
+    string name;
+    string address;
+    string city;
+    string state;
+    string county;
+    SchoolListNode* next;
+    SchoolListNode(string n, string a, string c, string s, string co) : name(n), address(a), city(c), state(s), county(co), next(nullptr) {}
+};
+
+class SchoolList {
+    SchoolListNode* head;
+    SchoolListNode* tail;
+    public:
+    SchoolList() : head(nullptr), tail(nullptr) {}
+    void insertFirst(SchoolListNode* school) {
+        if (head == nullptr) {
+            head = school;
+            tail = school;
+            return;
+        }
+        school->next = head;
+        head = school;
+    }
+    void deleteByName(string name) {
+        if (head == nullptr) {
+            return;
+        }
+        if (head->name == name) {
+            head = head->next;
+        }
+        else {
+            SchoolListNode* temp = head;
+            while (temp->next != nullptr) {
+                if (temp->next->name == name) {
+                    delete temp->next;
+                    temp->next = temp->next->next;
+                }
+                temp = temp->next;
+            }
+            tail = temp;
+        }
+    }
+    void findByName(string name) {
+        if (head == nullptr) {
+            return;
+        }
+        if (head->name == name) {
+            cout << head->name << ", " << head->address << ", " << head->city << ", " << head->state << ", " << head->county << endl;
+        }
+        else {
+            SchoolListNode* temp = head;
+            while (temp->next != nullptr) {
+                if (temp->next->name == name) {
+                    cout << temp->next->name << ", " << temp->next->address << ", " << temp->next->city << ", " << temp->next->state << ", " << temp->next->county << endl;
+                }
+                temp = temp->next;
+            }
+        }
+    }
+};
+
 int main() {
 
     return 0;
